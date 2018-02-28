@@ -8,7 +8,7 @@ module.exports.select = function(selector) {
     }
 }
 
-module.exports.get = function(id){
+module.exports.get = function(id) {
     return document.getElementById(id);
 }
 
@@ -16,8 +16,12 @@ var create = module.exports.create = function(tag) {
     return document.createElement(tag);
 }
 
-var append = module.exports.append = function(element) {
-    document.body.append(element);
+var append = module.exports.append = function(element, element1) {
+    if (element1 instanceof HTMLElement) {
+        element.appendChild(element1);
+    } else if (element instanceof HTMLElement) {
+        document.body.append(element);
+    }
 }
 
 module.exports.appendAll = function(elements) {
@@ -30,6 +34,11 @@ var makeElements = module.exports.makeElements = function(markup) {
     return _.map(div.children);
 }
 
+var empty = module.exports.empty = function(el) {
+    while (el.firstChild) {
+        el.removeChild(el.firstChild);
+    }
+};
 
 var addClass;
 if (document.body.classList) {

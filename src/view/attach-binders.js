@@ -2,17 +2,17 @@ const _ = require('lodash');
 const Dom = require('../standalone/dom');
 
 var _binders = {},
-	each = _.each;
+    each = _.each;
 
 var Binder = module.exports = function(attributes, options) {
-    attachBinders(options, this._binders, this);
+    attachBinders(options || {}, this._binders, this);
 }
 
 var attachBinders = function(options, binders, that) {
     var includeBinderGroups = options.includeBinderGroups;
     var includeBinders = options.includeBinders;
 
-    var binders = [];
+    // var binders = [];
     if ((!includeBinders || includeBinders.length == 0) &&
         (!includeBinderGroups || includeBinderGroups.length == 0)) {
         // binders = globalBinders;
@@ -29,7 +29,7 @@ var attachBinders = function(options, binders, that) {
         if (includeBinders) {
             each(includeBinders, function(binderName) {
                 each(binders, function(binder, id) {
-                    if (binder.binder == binderName) {
+                    if (binder.name == binderName) {
                         binders[id] = binder;
                     }
                 });
@@ -50,8 +50,8 @@ var attachBinder = function(options, binders, that) {
 
             var isQualified;
             each(binderObject.modes, function(mode) {
-                if ((mode == 'a' && el.hasAttribute(binderObject.binder)) ||
-                    (mode == 'e' && el.tagName == binderObject.binder)) {
+                if ((mode == 'a' && el.hasAttribute(binderObject.name)) ||
+                    (mode == 'e' && el.tagName == binderObject.name)) {
                     isQualified = true;
                     return false;
                 }
@@ -67,7 +67,7 @@ var callBinder = function(el, binderObject, that) {
 
     var property;
     if (binderObject.hasAttributeMode) {
-        property = el.getAttribute(binderObject.binder);
+        property = el.getAttribute(binderObject.name);
     }
     binderObject.callback.call(that, el, property);
 };

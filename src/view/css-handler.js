@@ -4,7 +4,7 @@ const Dom = require('../standalone/dom');
 var CssHandler = module.exports = function(attributes, options) {
 
     var self = this;
-    self.setCss(options.css);
+    self.setCss((options && options.css) || self.css);
 }
 
 var viewNameText = 'view-name';

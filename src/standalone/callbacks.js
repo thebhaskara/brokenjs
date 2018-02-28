@@ -6,7 +6,7 @@ var Callbacks = module.exports = function() {
 
 Callbacks.prototype.add = function(callback) {
     this.callbacks[callback] = callback;
-    return callbackId;
+    return callback;
 };
 
 Callbacks.prototype.addWithKey = function(key, callback) {

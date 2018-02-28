@@ -3,7 +3,18 @@ var Model = require('./model');
 var HtmlHandler = require('./view/html-handler');
 var Binder = require('./view/binder');
 require('./view/binders-basic');
+require('./view/binders-bind-value');
+var Events = require('./view/binders-events');
 var AttachBinders = require('./view/attach-binders');
 var CssHandler = require('./view/css-handler');
 
-module.exports = Merge(Model, HtmlHandler, Binder, AttachBinders, CssHandler);
+var ViewModel = module.exports = Merge(Model, HtmlHandler, Binder, AttachBinders, Events, CssHandler);
+
+ViewModel.make = function(options) {
+    return Merge(ViewModel, options);
+}
+
+ViewModel.create = function(options) {
+	var Fact = ViewModel.make(options);
+    return new Fact();
+}

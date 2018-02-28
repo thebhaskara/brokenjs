@@ -21,8 +21,8 @@ var addBinder = Binder.addBinder = Binder.prototype.addBinder = function(name, o
     }
 
     var modes = getUniqueModes(options);
-    var hasAttributeMode = _.find(modes, 'a');
-    var selectors = getSelectors(modes);
+    var hasAttributeMode = modes.join().indexOf('a') > -1;
+    var selectors = getSelectors(modes, name);
     binders[name] = {
         name: name,
         modes: modes,
@@ -39,7 +39,7 @@ var getUniqueModes = function(options) {
     return _.uniq(modes);
 }
 
-var getSelectors = function(modes) {
+var getSelectors = function(modes, name) {
     return _.map(modes, function(mode) {
         // attribute selector
         if (mode == 'a') {
