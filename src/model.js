@@ -4,5 +4,8 @@ var Name = require('./model/name');
 var Attributes = require('./model/attributes');
 var Destroy = require('./model/destroy');
 var Watcher = require('./model/watcher');
+var Inject = require('./model/inject');
+var Forward = require('./model/forward');
+var WatchAll = require('./model/watchAll');
 
-module.exports = Merge(Id, Name, Attributes, Destroy, Watcher);
+module.exports = Merge(Id, Name, Attributes, Destroy, Watcher, Forward, Inject, WatchAll);

@@ -62,18 +62,25 @@ Watcher.prototype.watch = function(component, path, callback) {
             };
         } else {
             watchId = component.watch(path, callback);
-            this.externalWatches[watchId] = component;
+            this._externalWatches[watchId] = component;
         }
         return watchId;
     }
 }
 
 Watcher.prototype.unwatch = function(watchId) {
-    delete this._watches[watchId];
-    if(this._externalWatches[watchId]) {
-        var component = this._externalWatches[watchId];
-        if (component && component.unwatch) {
-            component.unwatch(watchId);
+    var self = this;
+    if (_.isArray(watchId)) {
+        _.each(watchId, function(id) {
+            self.unwatch(id);
+        });
+    } else {
+        delete self._watches[watchId];
+        if (self._externalWatches[watchId]) {
+            var component = self._externalWatches[watchId];
+            if (component && component.unwatch) {
+                component.unwatch(watchId);
+            }
         }
     }
 }
