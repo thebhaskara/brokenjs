@@ -10,11 +10,11 @@ var CssHandler = require('./view/css-handler');
 
 var ViewModel = module.exports = Merge(Model, HtmlHandler, Binder, AttachBinders, Events, CssHandler);
 
-ViewModel.make = function(options) {
-    return Merge(ViewModel, options);
+ViewModel.make = function() {
+    return Merge.apply(this, _.concat([ViewModel], arguments));
 }
 
 ViewModel.create = function(options) {
-	var Fact = ViewModel.make(options);
+	var Fact = ViewModel.make.apply(this, arguments);
     return new Fact();
 }

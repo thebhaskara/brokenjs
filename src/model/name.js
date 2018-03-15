@@ -6,7 +6,8 @@ var names = {};
 var Name = module.exports = function(attributes, options) {
     var name = (options && options.name) || this.name;
     if (!name) name = 'component-' + nameInc.next();
-    if (names[name]) throw ["name", name, "already", "exists"].join(' ');
+    // crap! figure out how to do the name thing
+    // if (names[name]) throw ["name", name, "already", "exists"].join(' ');
     else names[name] = true;
     this._name = name;
 }

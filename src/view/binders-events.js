@@ -53,7 +53,7 @@ Events.createEventBinder = function(event) {
             // that.set(property, undefined);
         };
         attachEvent(event, el, handler);
-        self.addDestroyCallback(function() {
+        self.onDestroy.add(function() {
             detachEvent(event, el, handler);
         })
     }, {

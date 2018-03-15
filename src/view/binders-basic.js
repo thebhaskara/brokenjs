@@ -61,8 +61,8 @@ Binder.addBinder('bind-components', function(el, property) {
                 Dom.append(el, element);
             });
         });
-        each(_map, function(component) {
-            each(component._elements, function(element) {
+        _.each(_map, function(component) {
+            _.each(component._elements, function(element) {
                 el.removeChild(element);
             });
         });
@@ -100,6 +100,44 @@ Binder.addBinder('bind-class', function(el, property) {
             }
         })
     });
+}, {
+    modes: 'a',
+    groupName: 'basic'
+});
+
+Binder.addBinder('bind-show', function(el, property) {
+    this.watch(property, function(value) {
+        if (value) {
+            el.style.display = undefined;
+        } else {
+            el.style.display = "none";
+        }
+    });
+    // this.set(property, this.get(property));
+}, {
+    modes: 'a',
+    groupName: 'basic'
+});
+
+Binder.addBinder('bind-hide', function(el, property) {
+    this.watch(property, function(value) {
+        if (value) {
+            el.style.display = "none";
+        } else {
+            el.style.display = undefined;
+        }
+    });
+    // this.set(property, this.get(property));
+}, {
+    modes: 'a',
+    groupName: 'basic'
+});
+
+Binder.addBinder('bind-src', function(el, property) {
+    this.watch(property, function(value) {
+        el.src = value;
+    });
+    // this.set(property, this.get(property));
 }, {
     modes: 'a',
     groupName: 'basic'

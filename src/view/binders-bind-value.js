@@ -1,6 +1,8 @@
 const _ = require('lodash');
 const Binder = require('./binder');
 const Events = require('./binders-events');
+const each = _.each;
+const throttle = _.throttle;
 
 var getValue = function(el, prop) {
     return el[prop];

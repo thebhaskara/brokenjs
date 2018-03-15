@@ -2,9 +2,18 @@ var _ = require('lodash');
 var Incrementer = require('../standalone/incrementer');
 
 var Watcher = module.exports = function(attributes, options) {
-    this._watches = (options && options.watches) || {};
-    this._externalWatches = (options && options.externalWatches) || {};
-    attributes && executeWatches(this, this._watches);
+    var self = this;
+
+    self._watches = (options && options.watches) || {};
+    self._externalWatches = (options && options.externalWatches) || {};
+    attributes && executeWatches(self, self._watches);
+
+    var initWatches = (options && options.initWatches) || self.initWatches;
+    if (initWatches) {
+        _.each(initWatches, function(fn, key) {
+            self.watch(key, fn);
+        })
+    }
 };
 
 var trigger = function(component, path) {
@@ -45,11 +54,13 @@ var executeWatches = function(component, watches) {
 
 var watchesInc = new Incrementer;
 Watcher.prototype.watch = function(component, path, callback) {
+    // console.log(component, path, callback);
     var len = arguments.length,
         watchId; //, component, path, callback;
     if (len < 2 || len > 3) {
         throw "invalid arguments";
     } else if (arguments.length == 2) {
+        // console.log('calling reccursively!');
         return this.watch(this, component, path);
     } else if (!component || !component.watch) {
         throw "watch is not available";
@@ -62,7 +73,7 @@ Watcher.prototype.watch = function(component, path, callback) {
             };
         } else {
             watchId = component.watch(path, callback);
-            this.externalWatches[watchId] = component;
+            this._externalWatches[watchId] = component;
         }
         return watchId;
     }
@@ -70,7 +81,7 @@ Watcher.prototype.watch = function(component, path, callback) {
 
 Watcher.prototype.unwatch = function(watchId) {
     delete this._watches[watchId];
-    if(this._externalWatches[watchId]) {
+    if (this._externalWatches[watchId]) {
         var component = this._externalWatches[watchId];
         if (component && component.unwatch) {
             component.unwatch(watchId);
@@ -88,7 +99,7 @@ Watcher.prototype.set = function(path, value) {
 }
 
 Watcher.prototype.destroy = function() {
-    _.each(this.externalWatches, function(component, watchId) {
+    _.each(this._externalWatches, function(component, watchId) {
         if (component && component.unwatch) {
             component.unwatch(watchId);
         }
