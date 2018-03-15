@@ -106,28 +106,30 @@ Binder.addBinder('bind-class', function(el, property) {
 });
 
 Binder.addBinder('bind-show', function(el, property) {
-    this.watch(property, function(value) {
+    var fn = function(value) {
         if (value) {
-            el.style.display = undefined;
+            el.style.display = null;
         } else {
             el.style.display = "none";
         }
-    });
-    // this.set(property, this.get(property));
+    };
+    this.watch(property, fn);
+    fn(this.get(property));
 }, {
     modes: 'a',
     groupName: 'basic'
 });
 
 Binder.addBinder('bind-hide', function(el, property) {
-    this.watch(property, function(value) {
+    var fn = function(value) {
         if (value) {
             el.style.display = "none";
         } else {
-            el.style.display = undefined;
+            el.style.display = null;
         }
-    });
-    // this.set(property, this.get(property));
+    };
+    this.watch(property, fn);
+    fn(this.get(property));
 }, {
     modes: 'a',
     groupName: 'basic'
