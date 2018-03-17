@@ -1,10 +1,14 @@
 var _ = require('lodash');
 
 module.exports.select = function(selector) {
-    if (selector.trim().startsWith('<')) {
-        return makeElements(selector);
+    if (selector) {
+        if (selector.trim().startsWith('<')) {
+            return makeElements(selector);
+        } else {
+            return document.querySelectorAll(selector);
+        }
     } else {
-        return document.querySelectorAll(selector);
+        return [];
     }
 }
 
