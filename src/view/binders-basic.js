@@ -16,7 +16,7 @@ Binder.addBinder('bind-text', function(el, property) {
 
 Binder.addBinder('bind-html', function(el, property) {
     this.watch(property, function(text) {
-        el.innerHtml = text;
+        el.innerHTML = text;
     });
 }, {
     modes: 'a',

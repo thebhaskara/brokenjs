@@ -3,6 +3,7 @@ const Binder = require('./binder');
 const Events = require('./binders-events');
 const each = _.each;
 const throttle = _.throttle;
+const isNil = _.isNil;
 
 var getValue = function(el, prop) {
     return el[prop];
@@ -30,16 +31,16 @@ Binder.addBinder('bind-value', function(el, property) {
     var isHandlerCalled = false;
     var valueProperty = getValueProperty(el);
     var _value;
-    var handler = function(event) {
+    var handler = throttle(function(event) {
         var key = event.keyCode;
         if (key != 16 && key != 17 && key != 18) {
             _value = getValue(el, valueProperty, event.target)
             self.set(property, _value);
         }
-    }
+    }, 100);
 
     each(['change', 'keyup'], function(eventName) {
-        Events.attachEvent(eventName, el, throttle(handler, 100));
+        Events.attachEvent(eventName, el, handler);
     });
 
     self.watch(property, function(value) {

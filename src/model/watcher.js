@@ -36,7 +36,7 @@ var trigger = function(component, path) {
         _.each(component._watches, function(watch) {
             if (!watch.path && watch.path == path || _.startsWith(watch.path, path)) {
                 watches.push(watch);
-            } else if (parentPaths.length > 0 && _.find(parentPaths, watch.path)) {
+            } else if (parentPaths.length > 0 && _.find(parentPaths, function(p) { return p == watch.path })) {
                 watches.push(watch);
             }
         })
@@ -54,13 +54,12 @@ var executeWatches = function(component, watches) {
 
 var watchesInc = new Incrementer;
 Watcher.prototype.watch = function(component, path, callback) {
-    // console.log(component, path, callback);
+
     var len = arguments.length,
-        watchId; //, component, path, callback;
+        watchId;
     if (len < 2 || len > 3) {
         throw "invalid arguments";
     } else if (arguments.length == 2) {
-        // console.log('calling reccursively!');
         return this.watch(this, component, path);
     } else if (!component || !component.watch) {
         throw "watch is not available";
