@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var Callbacks = require('./callbacks');
+var Injector = require('./injector');
 
 var Merge = module.exports = function() {
     var init = new Callbacks,
@@ -25,6 +26,7 @@ var Merge = module.exports = function() {
 var getMerger = function(base) {
     return function(val, key) {
         var baseVal = base[key];
+        val = Injector.getInjectCallback(val);
         if (_.isFunction(baseVal) && _.isFunction(val)) {
             base[key] = function() {
                 baseVal.apply(this, arguments);

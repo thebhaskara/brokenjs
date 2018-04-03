@@ -22,9 +22,11 @@ ViewModel.create = function(options) {
 }
 
 ViewModel.strap = function(component) {
+    // console.log("strap", component._name);
     if (_.isArray(component)) {
         _.each(component, ViewModel.strap);
     } else {
+        !component._elements && component._render();
         Dom.appendAll(component._elements);
     }
 }

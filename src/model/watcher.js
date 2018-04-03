@@ -1,7 +1,7 @@
 var _ = require('lodash');
 var Incrementer = require('../standalone/incrementer');
 
-var Watcher = module.exports = function(attributes, options) {
+var Watcher = module.exports = function (attributes, options) {
     var self = this;
 
     self._watches = (options && options.watches) || {};
@@ -10,13 +10,15 @@ var Watcher = module.exports = function(attributes, options) {
 
     var initWatches = (options && options.initWatches) || self.initWatches;
     if (initWatches) {
-        _.each(initWatches, function(fn, key) {
-            self.watch(key, fn);
-        })
+        // setTimeout(function () {
+            _.each(initWatches, function (fn, key) {
+                self.watch(key, fn);
+            })
+        // })
     }
 };
 
-var trigger = function(component, path) {
+var trigger = function (component, path) {
     var watches = [],
         parentPaths = [];
 
@@ -33,10 +35,10 @@ var trigger = function(component, path) {
             split.pop();
         }
 
-        _.each(component._watches, function(watch) {
+        _.each(component._watches, function (watch) {
             if (!watch.path && watch.path == path || _.startsWith(watch.path, path)) {
                 watches.push(watch);
-            } else if (parentPaths.length > 0 && _.find(parentPaths, function(p) { return p == watch.path })) {
+            } else if (parentPaths.length > 0 && _.find(parentPaths, function (p) { return p == watch.path })) {
                 watches.push(watch);
             }
         })
@@ -45,15 +47,21 @@ var trigger = function(component, path) {
     executeWatches(component, watches);
 }
 
-var executeWatches = function(component, watches) {
-    _.each(watches, function(watch) {
+var executeWatches = function (component, watches) {
+    _.each(watches, function (watch) {
         var value = component.get(watch.path);
-        watch.callback.call(component, value);
+        var callback = watch.callback;
+        if(_.isString(callback)){
+            callback = component[callback];
+        }
+        if(_.isFunction(callback)){
+            callback.call(component, value);
+        }
     });
 }
 
 var watchesInc = new Incrementer;
-Watcher.prototype.watch = function(component, path, callback) {
+Watcher.prototype.watch = function (component, path, callback) {
 
     var len = arguments.length,
         watchId;
@@ -64,6 +72,8 @@ Watcher.prototype.watch = function(component, path, callback) {
     } else if (!component || !component.watch) {
         throw "watch is not available";
     } else {
+        // callback = callback.bind(component);
+        
         if (component == this) {
             watchId = watchesInc.next();
             this._watches[watchId] = {
@@ -74,14 +84,19 @@ Watcher.prototype.watch = function(component, path, callback) {
             watchId = component.watch(path, callback);
             this._externalWatches[watchId] = component;
         }
+        var value = component.get(path);
+        if (!_.isUndefined(value)) {
+            // callback.call(component, value);
+            executeWatches(component, [component._watches[watchId]]);
+        }
         return watchId;
     }
 }
 
-Watcher.prototype.unwatch = function(watchId) {
+Watcher.prototype.unwatch = function (watchId) {
     var self = this;
     if (_.isArray(watchId)) {
-        _.each(watchId, function(id) {
+        _.each(watchId, function (id) {
             self.unwatch(id);
         });
     } else {
@@ -95,7 +110,7 @@ Watcher.prototype.unwatch = function(watchId) {
     }
 }
 
-Watcher.prototype.set = function(path, value) {
+Watcher.prototype.set = function (path, value) {
     if (arguments.length == 1) {
         trigger(this);
     } else {
@@ -104,8 +119,8 @@ Watcher.prototype.set = function(path, value) {
     return this;
 }
 
-Watcher.prototype.destroy = function() {
-    _.each(this._externalWatches, function(component, watchId) {
+Watcher.prototype.destroy = function () {
+    _.each(this._externalWatches, function (component, watchId) {
         if (component && component.unwatch) {
             component.unwatch(watchId);
         }

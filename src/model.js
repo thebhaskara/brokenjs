@@ -7,5 +7,6 @@ var Watcher = require('./model/watcher');
 var Inject = require('./model/inject');
 var Forward = require('./model/forward');
 var WatchAll = require('./model/watchAll');
+// var WatchGet = require('./model/watchGet');
 
-module.exports = Merge(Id, Name, Attributes, Destroy, Watcher, Forward, Inject, WatchAll);
+module.exports = Merge(Id, Name, Attributes, Destroy, /* Inject, */ Watcher, Forward, /* WatchGet, */ WatchAll);

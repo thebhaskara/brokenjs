@@ -33,7 +33,8 @@ Binder.addBinder('bind-element', function(el, property) {
 Binder.addBinder('bind-component', function(el, property) {
     this.watch(property, function(component) {
         Dom.empty(el);
-        if (component && component._elements) {
+        if (component && component._render) {
+            !component._elements && component._render();
             _.each(component._elements, function(element) {
                 Dom.append(el, element);
             });
@@ -57,6 +58,7 @@ Binder.addBinder('bind-components', function(el, property) {
             var id = component._id;
             delete _map[id];
             map[id] = component;
+            !component._elements && component._render();
             _.each(component._elements, function(element) {
                 Dom.append(el, element);
             });
@@ -107,6 +109,8 @@ Binder.addBinder('bind-class', function(el, property) {
 
 Binder.addBinder('bind-show', function(el, property) {
     var fn = function(value) {
+        // if(property == "hasChildren") console.log('what is the problem?');
+        // console.log(this._name,this._id, property, value);
         if (value) {
             el.style.display = null;
         } else {
@@ -114,7 +118,7 @@ Binder.addBinder('bind-show', function(el, property) {
         }
     };
     this.watch(property, fn);
-    fn(this.get(property));
+    // fn(this.get(property));
 }, {
     modes: 'a',
     groupName: 'basic'
@@ -129,7 +133,7 @@ Binder.addBinder('bind-hide', function(el, property) {
         }
     };
     this.watch(property, fn);
-    fn(this.get(property));
+    // fn(this.get(property));
 }, {
     modes: 'a',
     groupName: 'basic'

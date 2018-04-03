@@ -3,8 +3,6 @@ const Dom = require('../standalone/dom');
 
 var CssHandler = module.exports = function(attributes, options) {
 
-    var self = this;
-    self.setCss((options && options.css) || self.css);
 }
 
 var viewNameText = 'view-name';
@@ -32,3 +30,8 @@ CssHandler.prototype.setCss = function(css) {
 
     return styleEl;
 };
+
+CssHandler.prototype._render = function(){
+    var self = this;
+    self.setCss((self.options && self.options.css) || self.css);
+}
