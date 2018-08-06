@@ -1,8 +1,7 @@
 const _ = require('lodash');
 const Dom = require('../standalone/dom');
 
-var _binders = {},
-    each = _.each;
+var each = _.each;
 
 var Binder = module.exports = function (attributes, options) {
 
@@ -17,10 +16,8 @@ var attachBinders = function (options, binders, that) {
     var includeBinderGroups = options.includeBinderGroups;
     var includeBinders = options.includeBinders;
 
-    // var binders = [];
     if ((!includeBinders || includeBinders.length == 0) &&
         (!includeBinderGroups || includeBinderGroups.length == 0)) {
-        // binders = globalBinders;
     } else {
         if (includeBinderGroups) {
             each(includeBinderGroups, function (groupName) {
@@ -40,19 +37,22 @@ var attachBinders = function (options, binders, that) {
                 });
             });
         }
-
     }
-    each(binders, attachBinder(options, binders, that));
+
+    var _binderElements = getAllElementsByBinder(binders, that);
+
+    callAllBinders(binders, _binderElements, that);
 };
 
-var attachBinder = function (options, binders, that) {
-    return function (binderObject, binderId) {
+var getAllElementsByBinder = function (binders, that) {
+
+    // figure out elements wrt binder
+    var _binderElements = {};
+    each(binders, function (binderObject, binderId) {
+        var elements = _binderElements[binderId] = [];
         each(that._elements, function (el) {
             var els = el.querySelectorAll(binderObject.selector);
-            each(els, function (el) {
-                callBinder(el, binderObject, that);
-            });
-
+            each(els, function (el) { elements.push(el) });
             var isQualified;
             each(binderObject.modes, function (mode) {
                 if ((mode == 'a' && el.hasAttribute(binderObject.name)) ||
@@ -62,14 +62,22 @@ var attachBinder = function (options, binders, that) {
                 }
             });
             if (isQualified) {
-                callBinder(el, binderObject, that);
+                elements.push(el);
             }
         });
-    };
-};
+    });
+    return _binderElements;
+}
+
+var callAllBinders = function (binders, _binderElements, that) {
+    each(binders, function (binderObject, binderId) {
+        each(_binderElements[binderId], function (el) {
+            callBinder(el, binderObject, that);
+        });
+    });
+}
 
 var callBinder = function (el, binderObject, that) {
-
     var property;
     if (binderObject.hasAttributeMode) {
         property = el.getAttribute(binderObject.name);
