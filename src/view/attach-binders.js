@@ -38,34 +38,36 @@ var attachBinders = function (options, binders, that) {
             });
         }
     }
-
     var _binderElements = getAllElementsByBinder(binders, that);
-
     callAllBinders(binders, _binderElements, that);
 };
 
 var getAllElementsByBinder = function (binders, that) {
 
-    // figure out elements wrt binder
+    var selectors = _.map(binders, function (binder) {
+        return binder.selector;
+    }).join(', ');
+
+    var els = [];
+    each(that._elements, function (el) {
+        var selectedElements = el.querySelectorAll(selectors);
+        els = els.concat(_.map(selectedElements));
+        els.push(el);
+    });
+
     var _binderElements = {};
-    each(binders, function (binderObject, binderId) {
-        var elements = _binderElements[binderId] = [];
-        each(that._elements, function (el) {
-            var els = el.querySelectorAll(binderObject.selector);
-            each(els, function (el) { elements.push(el) });
-            var isQualified;
-            each(binderObject.modes, function (mode) {
-                if ((mode == 'a' && el.hasAttribute(binderObject.name)) ||
-                    (mode == 'e' && el.tagName == binderObject.name)) {
-                    isQualified = true;
+    each(els, function (el) {
+        each(binders, function (binder, binderId) {
+            var elements = _binderElements[binderId] = _binderElements[binderId] || [];
+            each(binder.modes, function (mode) {
+                if ((mode == 'a' && el.hasAttribute(binder.name)) ||
+                    (mode == 'e' && el.tagName == binder.name)) {
+                    elements.push(el);
                     return false;
                 }
-            });
-            if (isQualified) {
-                elements.push(el);
-            }
+            })
         });
-    });
+    })
     return _binderElements;
 }
 
