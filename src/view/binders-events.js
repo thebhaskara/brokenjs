@@ -74,3 +74,10 @@ _.each([
     // touch events
     "touchstart", "touchend", "touchmove", "touchcancel",
 ], Events.createEventBinder);
+
+Events.prototype.attachEvent = function (event, element, handler) {
+    Events.attachEvent(event, element, handler);
+    this.onDestroy.add(function () {
+        Events.detachEvent(event, element, handler);
+    });
+}
