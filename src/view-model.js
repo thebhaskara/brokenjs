@@ -6,11 +6,12 @@ var Binder = require('./view/binder');
 require('./view/binders-basic');
 require('./view/binders-bind-value');
 var Events = require('./view/binders-events');
+var MutationEvent = require('./view/bind-mutation');
 var AttachBinders = require('./view/attach-binders');
 var CssHandler = require('./view/css-handler');
 var _ = require('lodash');
 
-var ViewModel = module.exports = Merge(Model, HtmlHandler, Binder, AttachBinders, Events, CssHandler);
+var ViewModel = module.exports = Merge(Model, HtmlHandler, Binder, AttachBinders, Events, CssHandler, MutationEvent);
 
 ViewModel.make = function() {
     return Merge.apply(this, _.concat([ViewModel], arguments));

@@ -19,4 +19,6 @@ HtmlHandler.prototype._render = function(){
         Dom.addClass(el, id);
         Dom.addClass(el, self._name);
     });
+
+    self.set('_internal.render', true);
 }
