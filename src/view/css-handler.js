@@ -19,6 +19,13 @@ CssHandler.prototype.setCss = function(css) {
         id = this._id;
     }
 
+    var styleEl = CssHandler.createStyleElement(css, id);
+
+    return styleEl;
+};
+
+CssHandler.createStyleElement = function (css, id) {
+
     var styleEl = Dom.get(id);
     if (_.isNil(styleEl)) {
         styleEl = Dom.create('style');
@@ -27,9 +34,8 @@ CssHandler.prototype.setCss = function(css) {
     }
 
     styleEl.innerHTML = css;
-
     return styleEl;
-};
+}
 
 CssHandler.prototype._render = function(){
     var self = this;
