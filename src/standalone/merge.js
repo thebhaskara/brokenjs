@@ -49,7 +49,6 @@ var getMerger = function (base, whenMergerPropertyBinding, init) {
 var mergeFunctions = function (val, key, base, init, flags) {
     var baseVal = base[key];
     if (baseVal != val && _.isFunction(baseVal) && _.isFunction(val)) {
-        console.log(baseVal, val, key);
         base[key] = function () {
             baseVal.apply(this, arguments);
             return val.apply(this, arguments);
@@ -75,22 +74,7 @@ var mergeArrays = function (val, key, base, init, flags) {
 }
 
 var mergeNonNil = function (val, key, base, init, flags) {
-    // if (!flags.isAssigned) {
-    //     base[key] = getNonNil(val, base[key]);
-    // }
-    // TODO - test this thoroughly
     if(_.isUndefined(base[key]) && !_.isUndefined(val)){
         base[key] = val;
     }
 }
-
-// var getNonNil = function () {
-//     var res;
-//     _.each(arguments, function (arg) {
-//         if (!_.isNull(arg) && !_.isUndefined(arg)) {
-//             res = arg;
-//             return false;
-//         }
-//     })
-//     return res;
-// }
