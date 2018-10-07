@@ -10,4 +10,10 @@ var Forward = require('./model/forward');
 var WatchAll = require('./model/watchAll');
 // var WatchGet = require('./model/watchGet');
 
+/**
+ * @class Model
+ * @description
+ * following functions are included <br>
+ * {@link Attributes#get}
+ */
 module.exports = Merge(Id, Name, Attributes, Destroy, /* Inject, */Injector, Watcher, Forward, /* WatchGet, */ WatchAll);
