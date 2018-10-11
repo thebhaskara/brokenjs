@@ -12,8 +12,7 @@ var WatchAll = require('./model/watchAll');
 
 /**
  * @class Model
- * @description
- * following functions are included <br>
- * {@link Attributes#get}
+ * @description 
+ * following functions are included
  */
 module.exports = Merge(Id, Name, Attributes, Destroy, /* Inject, */Injector, Watcher, Forward, /* WatchGet, */ WatchAll);

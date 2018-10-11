@@ -2,9 +2,8 @@
 var Callbacks = require('../standalone/callbacks');
 
 /**
- * initializes onDestory Callback's object.
  * @class Destroy
- * @classdesc 
+ * @description 
  * This class adds the ability to destroy object properly.<br>
  * This provides onDestroy(Callbacks) property internally.
  * onDestroy callbacks are run on the destroy function call.<br>
