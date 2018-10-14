@@ -13,6 +13,14 @@ var WatchAll = require('./model/watchAll');
 /**
  * @class Model
  * @description 
- * following functions are included
+ * Model is structure that can handle data, 
+ * with typical features like get, set and watch, also with many additional features.<br>
+ * Following are all the features that this stucture offers...
+ * @inheritsfeaturesfrom Attributes
+ * @inheritsfeaturesfrom Destroy
+ * @inheritsfeaturesfrom Forward
+ * @inheritsfeaturesfrom Id
+ * @inheritsfeaturesfrom Name
+ * @inheritsfeaturesfrom Injector
  */
 module.exports = Merge(Id, Name, Attributes, Destroy, /* Inject, */Injector, Watcher, Forward, /* WatchGet, */ WatchAll);

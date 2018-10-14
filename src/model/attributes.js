@@ -1,7 +1,7 @@
 var _ = require('lodash');
 
 /**
- * @class Attributes
+ * @feature Attributes
  * @description
  * initializes internal attributes object by the object provided, 
  * otherwise an empty object is initialized. 
