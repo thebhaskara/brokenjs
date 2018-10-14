@@ -11,6 +11,14 @@ var AttachBinders = require('./view/attach-binders');
 var CssHandler = require('./view/css-handler');
 var _ = require('lodash');
 
+/**
+ * @class ViewModel
+ * @description 
+ * ViewModel is structure that has Model abilities along with DOM capabilities.
+ * @inheritsfeaturesfrom Attributes
+ * @inheritsfeaturesfrom Destroy
+ * @inheritsfeaturesfrom Forward
+ */
 var ViewModel = module.exports = Merge(Model, HtmlHandler, Binder, AttachBinders, Events, CssHandler, MutationEvent);
 
 ViewModel.make = function() {
