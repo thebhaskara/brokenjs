@@ -1,6 +1,21 @@
 var glob = require("glob");
 var _ = require("lodash");
-var { Replacer } = require("./template-operations");
+var { Replacer } = require("./replacer");
+
+var isTextTypeProperty = {
+    "name": true,
+    "type": true,
+    "fileUrl": true,
+    "class": true,
+    "feature": true,
+    "function": true,
+    "description": true,
+    "example": false,
+    "param": false,
+    "inheritsfeaturesfrom": false,
+    "functions": false,
+}
+let properties = _.assign({}, isTextTypeProperty);
 
 function makeDocs() {
 
@@ -16,148 +31,86 @@ function makeDocs() {
         var classMap = {};
         var featureMap = {};
 
-        var result = _.map(files, function (file) {
+        _.each(files, function (file) {
 
             var contents = readFile(file);
-
             var docs = getDocs(contents);
-
             var realDoc = {};
+            let fileName = "https://github.com/thebhaskara/brokenjs/blob/master/" + file;
 
             _.each(docs, doc => {
-                if (doc["class"]) {
-                    var className = realDoc["name"] = doc["class"][0];
-                    classMap[className] = realDoc;
-                    realDoc["description"] = doc["description"] && doc["description"].join(' ');
-                    realDoc["inheritsfeaturesfrom"] = doc["inheritsfeaturesfrom"];
-                } else if (doc["feature"]) {
-                    var featureName = realDoc["name"] = doc["feature"][0];
-                    featureMap[featureName] = realDoc;
-                    realDoc["description"] = doc["description"] && doc["description"].join(' ');
-                    realDoc["examples"] = doc["example"]
-                } else if (doc["function"]) {
-                    var functions = realDoc['functions'] || (realDoc['functions'] = []);
-                    var functionsMap = realDoc['functionsMap'] || (realDoc['functionsMap'] = {});
-                    var fn = {
-                        name: doc["function"][0],
-                        description: doc["description"] && doc["description"].join(' '),
-                        functionof: doc["functionof"] && doc["functionof"][0],
-                        examples: doc["example"],
-                        params: doc["param"],
+
+                let res = { fileUrl: fileName + "#L" + doc.lineNumber };
+                _.each(doc, (val, property) => {
+                    if (isTextTypeProperty[property]) {
+                        val = val && val.join(' ');
                     }
-                    functionsMap[fn.name] = fn;
-                    functions.push(fn);
+                    if (val) {
+                        res[property] = val;
+                    }
+                })
+
+                if (res["class"]) {
+                    var name = res["name"] = res["class"];
+                    res.type = "class";
+                    _.assign(realDoc, res);
+                    classMap[name] = realDoc;
+                } else if (res["feature"]) {
+                    var name = res["name"] = res["feature"];
+                    res.type = "feature";
+                    _.assign(realDoc, res);
+                    featureMap[name] = realDoc;
+                } else if (res["function"]) {
+                    var functions = realDoc['functions'] || (realDoc['functions'] = []);
+                    res["name"] = res["function"];
+                    res.type = "function";
+                    functions.push(res);
                 }
             })
-
-            return {
-                file: file,
-                doc: realDoc,
-                docs
-            };
         });
 
         resetFolder(docsFolderPath);
 
         var indexTemplate = readFile(templatesFolderPath + '/index.html');
-        var classTemplate = readFile(templatesFolderPath + '/class-template.html');
-        var featureTemplate = readFile(templatesFolderPath + '/feature-template.html');
-        var functionTemplate = readFile(templatesFolderPath + '/function-template.html');
+        var template = readFile(templatesFolderPath + '/template.html');
 
         var content = '';
 
-        // _.each(result, function (classDoc) {
-        //     var c = classDoc.doc;
-        _.each(classMap, function (classDoc) {
+        let Placer = function (obj) {
+            let rep = new Replacer(template, obj)
+            _.each(properties, (value, property) => {
+                value = obj[property];
+                if (property == "inheritsfeaturesfrom") {
+                    rep.setByList('inheritsfeaturesfrom', '<div><small>Features</small><div>{}</div></div>', feature => {
+                        if (feature = featureMap[feature]) {
+                            return Placer(feature).template;
+                        }
+                        return '';
+                    });
+                } else if (property == "functions") {
+                    rep.setByList('functions', '<div><small>functions</small><div>{}</div></div>', fn => Placer(fn).template);
+                } else if (property == "param") {
+                    rep.setFor(property, '<br>', "<div><small>parameters</small><div>{}</div></div>")
+                } else if (property == "example") {
+                    rep.setFor(property, '<br>', "<div><small>example</small><div><pre><code>{}</code></pre></div></div>")
+                } else if (property == "description") {
+                    rep.setFor(property, null, "<div><small>description</small><div>{}</div></div>")
+                } else if (property == "type") {
+                    rep.setFor(property)
+                    rep.setFor(property)
+                } else {
+                    rep.setFor(property)
+                }
+            });
+            return rep;
+        }
 
-            var c = classDoc;
-
-            if (c.name) {
-
-                let rep = new Replacer(classTemplate, c);
-                rep.setFor('name')
-                rep.setFor('description')
-                rep.setByList('inheritsfeaturesfrom', '<div class="px-md-3">{}</div>', feature => {
-                    if (feature = featureMap[feature]) {
-                        feature.name == "Injector" && console.log(feature);
-                        let rep = new Replacer(featureTemplate, feature)
-                        rep.setFor('name')
-                        rep.setFor('description')
-                        rep.setWithPreCodeWrapperFor('examples', '\n')
-
-                        rep.setByList('functions', '<div class="px-md-3">{}</div>', fn => {
-                            let rep = new Replacer(functionTemplate, fn);
-                            rep.setFor('name')
-                            rep.setFor('description')
-                            rep.setFor('params', '<br>')
-                            rep.setWithPreCodeWrapperFor('examples', '\n');
-                            return rep.template;
-                        })
-                        return rep.template;
-                    }
-                    return '';
-                })
-                rep.setByList('functions', '<div class="px-md-3">{}</div>', fn => {
-                    let rep = new Replacer(functionTemplate, fn);
-                    rep.setFor('name')
-                    rep.setFor('description')
-                    rep.setFor('params', '<br>')
-                    rep.setWithPreCodeWrapperFor('examples', '\n');
-                    return rep.template;
-                })
-                rep.setWithPreCodeWrapperFor('examples', '\n');
-
-                content += rep.template;
-
-                // let temp = classTemplate;
-                // temp = temp.replace('{name}', c.name);
-                // temp = temp.replace('{description}', c.description);
-
-                // // console.log(c.inheritsfeaturesfrom);
-                // let inheritsfeaturesfrom = _.map(c.inheritsfeaturesfrom, feature => {
-                //     // console.log(feature);
-                //     feature = featureMap[feature];
-                //     // console.log(feature);
-                //     if (!feature) return '';
-
-                //     let temp = featureTemplate;
-                //     temp = temp.replace('{name}', feature.name);
-                //     temp = temp.replace('{description}', feature.description);
-                //     temp = temp.replace('{examples}', feature.examples && feature.examples.join('\n'))
-
-                //     let fns = _.map(feature.functions, fn => {
-                //         let temp = functionTemplate;
-                //         temp = temp.replace('{name}', fn.name);
-                //         temp = temp.replace('{description}', fn.description);
-                //         temp = temp.replace('{params}', fn.params && fn.params.join('<br>'));
-                //         let exampleText = fn.examples && fn.examples.join('<br>');
-                //         exampleText = exampleText.replace('\n', '');
-                //         // console.log(JSON.stringify(exampleText));
-                //         temp = temp.replace('{examples}', exampleText);
-                //         return temp;
-                //     });
-
-                //     temp = temp.replace('{functions}', fns.join(''));
-
-                //     return temp;
-                // });
-
-                // temp = temp.replace('{inheritsfeaturesfrom}', inheritsfeaturesfrom.join(''));
-
-                // let fns = _.map(c.functions, fn => {
-                //     let temp = functionTemplate;
-                //     temp = temp.replace('{name}', fn.name);
-                //     temp = temp.replace('{description}', fn.description);
-                //     temp = temp.replace('{params}', fn.params && fn.params.join('<br>'));
-                //     temp = temp.replace('{examples}', fn.examples && fn.examples.join('\n'));
-                //     return temp;
-                // });
-
-                // temp = temp.replace('{functions}', fns.join(''));
-
-                // content += temp;
+        _.each(classMap, (classDoc) => {
+            if (classDoc.name) {
+                content += Placer(classDoc).template;
             }
         });
+
         var index = indexTemplate.replace('{content}', content);
         writeFile(docsFolderPath + "/index.html", index);
         console.log("Successfully made docs");

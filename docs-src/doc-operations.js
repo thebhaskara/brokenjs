@@ -2,10 +2,12 @@ let getDocs = module.exports.getDocs = function (contents) {
     var lines = contents.split('\n');
     var res = [];
     var block;
+    var lineNumber = 0;
 
     while (lines.length > 0) {
 
         var line = lines.shift().trim();
+        lineNumber++;
 
         if (line.startsWith('/**')) {
             block = [];
@@ -13,15 +15,15 @@ let getDocs = module.exports.getDocs = function (contents) {
             block.push(line.replace("*", "").trim());
         } else if (line.endsWith('*/')) {
             // block.push(lines.shift().trim());
-            processBlock(block, res)
+            processBlock(block, res, lineNumber + 1);
         }
     }
 
     return res;
 }
 
-let processBlock = module.exports.processBlock = function (block, res) {
-    var c = {},
+let processBlock = module.exports.processBlock = function (block, res, lineNumber) {
+    var c = { lineNumber },
         line,
         key = 'description';
 
