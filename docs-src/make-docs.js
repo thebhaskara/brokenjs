@@ -75,13 +75,24 @@ function makeDocs() {
         var indexTemplate = readFile(templatesFolderPath + '/index.html');
         var template = readFile(templatesFolderPath + '/template.html');
 
-        var content = '';
+
+        var navLinkHtml = '<a href="#{id}" class="list-group-item list-group-item-action"><span class="tab-{tabSize}">{name}</span> <span class="type">{type}</span></a>';
+        var addNavLink = function (doc) {
+            let tag = navLinkHtml.replace('{name}', doc.name);
+            tag = tag.replace("{id}", doc.id);
+            tag = tag.replace("{type}", doc.type);
+            tag = tag.replace("{tabSize}", doc.id.split('-').length);
+            navLinks.push(tag);
+        }
+
+        var navLinks = [];
 
         let Placer = function (obj, prefix) {
             let id = obj["id"] = obj["name"];
             if (prefix) {
                 id = obj["id"] = [prefix, id].join('-');
             }
+            addNavLink(obj);
             let rep = new Replacer(template, obj)
             _.each(properties, (value, property) => {
                 value = obj[property];
@@ -112,13 +123,18 @@ function makeDocs() {
             return rep;
         }
 
+        var content = '';
+
         _.each(classMap, (classDoc) => {
             if (classDoc.name) {
                 content += Placer(classDoc).template;
             }
         });
+        
+        var navsection = '<div class="list-group list-group-flush">{}</div>'.replace("{}", navLinks.join(""))
 
         var index = indexTemplate.replace('{content}', content);
+        index = index.replace('{navlinks}', navsection);
         writeFile(docsFolderPath + "/index.html", index);
         console.log("Successfully made docs");
     });

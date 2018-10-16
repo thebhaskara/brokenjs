@@ -12,8 +12,14 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
     crossorigin="anonymous">
   <style>
+    html,
+    body {
+      height: 100%;
+    }
+
     body {
       font-family: sans-serif;
+
     }
 
     .type,
@@ -56,14 +62,38 @@
       font-weight: bold;
       letter-spacing: 1px;
     }
+
+    .h-100 {
+      overflow: auto;
+    }
+
+    .tab-2 {
+      padding-left: 1rem;
+    }
+
+    .tab-3 {
+      padding-left: 2rem;
+    }
+
+    .tab-4 {
+      padding-left: 3rem;
+    }
+
+    .tab-5 {
+      padding-left: 4rem;
+    }
   </style>
 </head>
 
-<body class="container-fluid">
+<body>
   <!-- <h1>Hello, world!</h1> -->
-  <section>
-    <h1>API Documentation</h1>
-    <div class="pl-md-3 pt-3">
+  <section class="d-md-flex flex-row h-100">
+    <section class="col-md-3 h-100 flex-shrink">
+      <div class="list-group list-group-flush"><a href="#Model" class="list-group-item list-group-item-action"><span class="tab-1">Model</span> <span class="type">class</span></a><a href="#Model-Attributes" class="list-group-item list-group-item-action"><span class="tab-2">Attributes</span> <span class="type">feature</span></a><a href="#Model-Attributes-get" class="list-group-item list-group-item-action"><span class="tab-3">get</span> <span class="type">function</span></a><a href="#Model-Attributes-set" class="list-group-item list-group-item-action"><span class="tab-3">set</span> <span class="type">function</span></a><a href="#Model-Attributes-destroy" class="list-group-item list-group-item-action"><span class="tab-3">destroy</span> <span class="type">function</span></a><a href="#Model-Destroy" class="list-group-item list-group-item-action"><span class="tab-2">Destroy</span> <span class="type">feature</span></a><a href="#Model-Destroy-destroy" class="list-group-item list-group-item-action"><span class="tab-3">destroy</span> <span class="type">function</span></a><a href="#Model-Forward" class="list-group-item list-group-item-action"><span class="tab-2">Forward</span> <span class="type">feature</span></a><a href="#Model-Forward-forward" class="list-group-item list-group-item-action"><span class="tab-3">forward</span> <span class="type">function</span></a><a href="#Model-Forward-forwardAll" class="list-group-item list-group-item-action"><span class="tab-3">forwardAll</span> <span class="type">function</span></a><a href="#Model-Id" class="list-group-item list-group-item-action"><span class="tab-2">Id</span> <span class="type">feature</span></a><a href="#Model-Name" class="list-group-item list-group-item-action"><span class="tab-2">Name</span> <span class="type">feature</span></a><a href="#Model-Injector" class="list-group-item list-group-item-action"><span class="tab-2">Injector</span> <span class="type">feature</span></a><a href="#ViewModel" class="list-group-item list-group-item-action"><span class="tab-1">ViewModel</span> <span class="type">class</span></a><a href="#ViewModel-Attributes" class="list-group-item list-group-item-action"><span class="tab-2">Attributes</span> <span class="type">feature</span></a><a href="#ViewModel-Attributes-get" class="list-group-item list-group-item-action"><span class="tab-3">get</span> <span class="type">function</span></a><a href="#ViewModel-Attributes-set" class="list-group-item list-group-item-action"><span class="tab-3">set</span> <span class="type">function</span></a><a href="#ViewModel-Attributes-destroy" class="list-group-item list-group-item-action"><span class="tab-3">destroy</span> <span class="type">function</span></a><a href="#ViewModel-Destroy" class="list-group-item list-group-item-action"><span class="tab-2">Destroy</span> <span class="type">feature</span></a><a href="#ViewModel-Destroy-destroy" class="list-group-item list-group-item-action"><span class="tab-3">destroy</span> <span class="type">function</span></a><a href="#ViewModel-Forward" class="list-group-item list-group-item-action"><span class="tab-2">Forward</span> <span class="type">feature</span></a><a href="#ViewModel-Forward-forward" class="list-group-item list-group-item-action"><span class="tab-3">forward</span> <span class="type">function</span></a><a href="#ViewModel-Forward-forwardAll" class="list-group-item list-group-item-action"><span class="tab-3">forwardAll</span> <span class="type">function</span></a></div>
+    </section>
+    <section class="col-md-9 flex-grow h-100">
+      <h1>API Documentation</h1>
+      <div class="pl-md-3 pt-3">
     <div id="Model">
         <div class="class name">Model</div>
         <span class="type">class</span>
@@ -106,7 +136,7 @@ attributesObj.get('employee.id'); // returns 10</code></pre></div></div>
     <div id="Model-Attributes-get">
         <div class="function name">get</div>
         <span class="type">function</span>
-        <a class="show-code-link" href="https://github.com/thebhaskara/brokenjs/blob/master/./src/model/attributes.js#L29" target="_blank">source code</a>
+        <a class="show-code-link" href="https://github.com/thebhaskara/brokenjs/blob/master/./src/model/attributes.js#L30" target="_blank">source code</a>
     </div>
     <div class="pl-md-2 pt-2">
         <div class="d-md-flex flex-row">
@@ -127,7 +157,7 @@ attributesObj.get('employee.id'); // returns 10</code></pre></div></div>
     <div id="Model-Attributes-set">
         <div class="function name">set</div>
         <span class="type">function</span>
-        <a class="show-code-link" href="https://github.com/thebhaskara/brokenjs/blob/master/./src/model/attributes.js#L47" target="_blank">source code</a>
+        <a class="show-code-link" href="https://github.com/thebhaskara/brokenjs/blob/master/./src/model/attributes.js#L48" target="_blank">source code</a>
     </div>
     <div class="pl-md-2 pt-2">
         <div class="d-md-flex flex-row">
@@ -147,7 +177,7 @@ Internally uses lodash _.set</div></div></div>
     <div id="Model-Attributes-destroy">
         <div class="function name">destroy</div>
         <span class="type">function</span>
-        <a class="show-code-link" href="https://github.com/thebhaskara/brokenjs/blob/master/./src/model/attributes.js#L64" target="_blank">source code</a>
+        <a class="show-code-link" href="https://github.com/thebhaskara/brokenjs/blob/master/./src/model/attributes.js#L65" target="_blank">source code</a>
     </div>
     <div class="pl-md-2 pt-2">
         <div class="d-md-flex flex-row">
@@ -375,7 +405,7 @@ attributesObj.get('employee.id'); // returns 10</code></pre></div></div>
     <div id="ViewModel-Attributes-get">
         <div class="function name">get</div>
         <span class="type">function</span>
-        <a class="show-code-link" href="https://github.com/thebhaskara/brokenjs/blob/master/./src/model/attributes.js#L29" target="_blank">source code</a>
+        <a class="show-code-link" href="https://github.com/thebhaskara/brokenjs/blob/master/./src/model/attributes.js#L30" target="_blank">source code</a>
     </div>
     <div class="pl-md-2 pt-2">
         <div class="d-md-flex flex-row">
@@ -396,7 +426,7 @@ attributesObj.get('employee.id'); // returns 10</code></pre></div></div>
     <div id="ViewModel-Attributes-set">
         <div class="function name">set</div>
         <span class="type">function</span>
-        <a class="show-code-link" href="https://github.com/thebhaskara/brokenjs/blob/master/./src/model/attributes.js#L47" target="_blank">source code</a>
+        <a class="show-code-link" href="https://github.com/thebhaskara/brokenjs/blob/master/./src/model/attributes.js#L48" target="_blank">source code</a>
     </div>
     <div class="pl-md-2 pt-2">
         <div class="d-md-flex flex-row">
@@ -416,7 +446,7 @@ Internally uses lodash _.set</div></div></div>
     <div id="ViewModel-Attributes-destroy">
         <div class="function name">destroy</div>
         <span class="type">function</span>
-        <a class="show-code-link" href="https://github.com/thebhaskara/brokenjs/blob/master/./src/model/attributes.js#L64" target="_blank">source code</a>
+        <a class="show-code-link" href="https://github.com/thebhaskara/brokenjs/blob/master/./src/model/attributes.js#L65" target="_blank">source code</a>
     </div>
     <div class="pl-md-2 pt-2">
         <div class="d-md-flex flex-row">
@@ -544,6 +574,7 @@ forwarderObj.forward(modelA, 'employee.name', modelB, 'manager.name');</code></p
 </div></div></div>
     </div>
 </div>
+    </section>
   </section>
 
   <!-- Optional JavaScript -->
