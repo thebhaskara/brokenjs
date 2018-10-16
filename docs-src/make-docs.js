@@ -14,6 +14,7 @@ var isTextTypeProperty = {
     "param": false,
     "inheritsfeaturesfrom": false,
     "functions": false,
+    "id": false,
 }
 let properties = _.assign({}, isTextTypeProperty);
 
@@ -76,19 +77,23 @@ function makeDocs() {
 
         var content = '';
 
-        let Placer = function (obj) {
+        let Placer = function (obj, prefix) {
+            let id = obj["id"] = obj["name"];
+            if (prefix) {
+                id = obj["id"] = [prefix, id].join('-');
+            }
             let rep = new Replacer(template, obj)
             _.each(properties, (value, property) => {
                 value = obj[property];
                 if (property == "inheritsfeaturesfrom") {
                     rep.setByList('inheritsfeaturesfrom', '<div><small>Features</small><div>{}</div></div>', feature => {
                         if (feature = featureMap[feature]) {
-                            return Placer(feature).template;
+                            return Placer(feature, id).template;
                         }
                         return '';
                     });
                 } else if (property == "functions") {
-                    rep.setByList('functions', '<div><small>functions</small><div>{}</div></div>', fn => Placer(fn).template);
+                    rep.setByList('functions', '<div><small>functions</small><div>{}</div></div>', fn => Placer(fn, id).template);
                 } else if (property == "param") {
                     rep.setFor(property, '<br>', "<div><small>parameters</small><div>{}</div></div>")
                 } else if (property == "example") {
@@ -97,6 +102,8 @@ function makeDocs() {
                     rep.setFor(property, null, "<div><small>description</small><div>{}</div></div>")
                 } else if (property == "type") {
                     rep.setFor(property)
+                    rep.setFor(property)
+                } else if (property == "id") {
                     rep.setFor(property)
                 } else {
                     rep.setFor(property)
