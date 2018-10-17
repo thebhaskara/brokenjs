@@ -22,5 +22,7 @@ var WatchAll = require('./model/watchAll');
  * @inheritsfeaturesfrom Id
  * @inheritsfeaturesfrom Name
  * @inheritsfeaturesfrom Injector
+ * @inheritsfeaturesfrom Watcher
+ * @inheritsfeaturesfrom WathcherAll
  */
 module.exports = Merge(Id, Name, Attributes, Destroy, /* Inject, */Injector, Watcher, Forward, /* WatchGet, */ WatchAll);

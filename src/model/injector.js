@@ -4,12 +4,21 @@ var _ = require('lodash');
  * @feature Injector
  * @description 
  * This feature adds the ability to pass values at paths into a given function.
+ * The properties that are passed in the format shown in the example, 
+ * will be replaced with a function that has these paths injected as parameters into it.
+ * Observe that prop1 is being used as a callback when called from prop2.
  * @example
- * ['path1', 'path2', function(path1Value, path2Value){
- *     // your code here
- * }]
- * @param
- * none
+ * let mergeable = {
+ *     prop1: ['path1', 'path2', function(path1Value, path2Value){
+ *         // your code here
+ *     }],
+ *     prop2: function(){
+ *         this.prop1();
+ *     }
+ * }
+ * let merged = Broken.Merge(mergeable);
+ * let mergedObj = new merged();
+ * mergedObj.prop1();
  */
 var Injector = module.exports = function () { };
 

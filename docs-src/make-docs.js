@@ -76,16 +76,18 @@ function makeDocs() {
         var template = readFile(templatesFolderPath + '/template.html');
 
 
-        var navLinkHtml = '<a href="#{id}" class="list-group-item list-group-item-action"><span class="tab-{tabSize}">{name}</span> <span class="type">{type}</span></a>';
+        // var navLinkHtml = '<a href="#{id}" class="list-group-item list-group-item-action"><span class="tab-{tabSize}">{name}</span> <span class="type">{type}</span></a>';
         var addNavLink = function (doc) {
-            let tag = navLinkHtml.replace('{name}', doc.name);
-            tag = tag.replace("{id}", doc.id);
-            tag = tag.replace("{type}", doc.type);
-            tag = tag.replace("{tabSize}", doc.id.split('-').length);
-            navLinks.push(tag);
+            // let tag = navLinkHtml.replace('{name}', doc.name);
+            // tag = tag.replace("{id}", doc.id);
+            // tag = tag.replace("{type}", doc.type);
+            // tag = tag.replace("{tabSize}", doc.id.split('-').length);
+            // navLinks.push(tag);
+            navLinksDetails.push({ id: doc.id, name: doc.name, type: doc.type });
         }
 
         var navLinks = [];
+        var navLinksDetails = [];
 
         let Placer = function (obj, prefix) {
             let id = obj["id"] = obj["name"];
@@ -130,11 +132,34 @@ function makeDocs() {
                 content += Placer(classDoc).template;
             }
         });
-        
-        var navsection = '<div class="list-group list-group-flush">{}</div>'.replace("{}", navLinks.join(""))
+
+        // var navsection = '<div class="list-group list-group-flush">{}</div>'.replace("{}", navLinks.join(""))
+
+        let navLinksDetailsObj = {}
+        _.each(navLinksDetails, detail => {
+            _.set(navLinksDetailsObj, detail.id.split('-').join('.children.') + '.node', detail);
+        });
+
+        let li = '<li>{}</li>'
+        let ul = '<ul>{}</ul>'
+        let ahref = '<a href="#{id}">{name}</a>'
+        let buildHeirarchy = function (val, key, container) {
+            let link = '';
+            if (val.node) {
+                link = ahref.replace('{id}', val.node.id)
+                link = link.replace('{name}', val.node.name)
+            }
+            let children = '';
+            if (val.children) {
+                let c = _.map(val.children, (val, key) => buildHeirarchy(val, key));
+                children = ul.replace('{}', c.join(""))
+            }
+            return li.replace('{}', link + children);
+        }
+        let navs = _.map(navLinksDetailsObj, (val, key) => buildHeirarchy(val, key, ul));
 
         var index = indexTemplate.replace('{content}', content);
-        index = index.replace('{navlinks}', navsection);
+        index = index.replace('{navlinks}', ul.replace('{}', navs.join('')));
         writeFile(docsFolderPath + "/index.html", index);
         console.log("Successfully made docs");
     });

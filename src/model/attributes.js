@@ -25,7 +25,6 @@ var Attributes = module.exports = function(attributes) {
  * attributesObj.get('employee.name'); // returns 'Rayn'
  * attributesObj.get('employee.id'); // returns 10
  * @param {String} [path] - string object path.
- * @functionof Model
  */
 Attributes.prototype.get = function(path) {
     if (path) {
