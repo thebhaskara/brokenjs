@@ -21,8 +21,6 @@ var Destroy = module.exports = function () {
  * var destoryableObj = new Destory();
  * destoryableObj.onDestroy.add(() => console.log('called on destroy'));
  * destoryableObj.destroy(); // logs 'called on destroy' on console
- * @param
- * empty
  */
 Destroy.prototype.destroy = function () {
     this.onDestroy.run();

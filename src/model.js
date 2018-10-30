@@ -25,5 +25,6 @@ var Relationship = require('./model/relationship');
  * @inheritsfeaturesfrom Injector
  * @inheritsfeaturesfrom Watcher
  * @inheritsfeaturesfrom WathcherAll
+ * @inheritsfeaturesfrom Relationship
  */
 module.exports = Merge(Id, Name, Attributes, Destroy, /* Inject, */Injector, Watcher, Forward, /* WatchGet, */ WatchAll, Relationship);
