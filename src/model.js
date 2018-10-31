@@ -9,6 +9,7 @@ var Injector = require('./model/injector');
 var Forward = require('./model/forward');
 var WatchAll = require('./model/watchAll');
 var Relationship = require('./model/relationship');
+var Initializer = require('./model/initializer');
 // var WatchGet = require('./model/watchGet');
 
 /**
@@ -26,5 +27,6 @@ var Relationship = require('./model/relationship');
  * @inheritsfeaturesfrom Watcher
  * @inheritsfeaturesfrom WathcherAll
  * @inheritsfeaturesfrom Relationship
+ * @inheritsfeaturesfrom Initializer
  */
-module.exports = Merge(Id, Name, Attributes, Destroy, /* Inject, */Injector, Watcher, Forward, /* WatchGet, */ WatchAll, Relationship);
+module.exports = Merge(Id, Name, Attributes, Destroy, /* Inject, */Injector, Watcher, Forward, /* WatchGet, */ WatchAll, Relationship, Initializer);

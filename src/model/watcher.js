@@ -16,11 +16,18 @@ var Watcher = module.exports = function (attributes, options) {
 
     var initWatches = (options && options.initWatches) || self.initWatches;
     if (initWatches) {
-        // setTimeout(function () {
-        _.each(initWatches, function (fn, key) {
-            self.watch(key, fn);
-        })
-        // })
+        var attachWatches = function (watches) {
+            _.each(watches, function (fn, key) {
+                self.watch(key, fn);
+            })
+        }
+        if (_.isArray(initWatches)) {
+            _.each(initWatches, function (watches) {
+                attachWatches(watches);
+            })
+        } else {
+            attachWatches(initWatches);
+        }
     }
 };
 
