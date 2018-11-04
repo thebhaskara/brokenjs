@@ -10,6 +10,9 @@ var Binder = module.exports = function (attributes, options) {
 Binder.prototype._render = function () {
     var self = this;
     attachBinders(self.options || {}, self._binders, self);
+    setTimeout(function () {
+        self.set('_internal.render', true);
+    })
 }
 
 var attachBinders = function (options, binders, that) {

@@ -1,11 +1,11 @@
 const _ = require('lodash');
 const Dom = require('../standalone/dom');
 
-var HtmlHandler = module.exports = function(attributes, options) {
+var HtmlHandler = module.exports = function (attributes, options) {
 
 }
 
-HtmlHandler.prototype._render = function(){
+HtmlHandler.prototype._render = function () {
     var self = this;
     var options = self.options || {};
 
@@ -15,10 +15,8 @@ HtmlHandler.prototype._render = function(){
 
     var id = [self._name, self._id].join('-');
 
-    _.each(self._elements, function(el) {
+    _.each(self._elements, function (el) {
         Dom.addClass(el, id);
         Dom.addClass(el, self._name);
     });
-
-    self.set('_internal.render', true);
 }
