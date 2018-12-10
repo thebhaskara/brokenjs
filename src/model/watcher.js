@@ -12,6 +12,7 @@ var Watcher = module.exports = function (attributes, options) {
 
     self._watches = (options && options.watches) || {};
     self._externalWatches = (options && options.externalWatches) || {};
+    self._executingWatches = {};
     attributes && executeWatches(self, self._watches);
 
     var initWatches = (options && options.initWatches) || self.initWatches;
@@ -106,7 +107,14 @@ Watcher.prototype.watch = function (component, path, callback) {
             watchId = watchesInc.next();
             this._watches[watchId] = {
                 path: path,
-                callback: callback
+                callback: function () {
+                    // verify if this watch is calling itself
+                    if (!component._executingWatches[watchId]) {
+                        component._executingWatches[watchId] = true;
+                        callback.apply(this, arguments);
+                        component._executingWatches[watchId] = false;
+                    }
+                }
             };
         } else {
             watchId = component.watch(path, callback);
