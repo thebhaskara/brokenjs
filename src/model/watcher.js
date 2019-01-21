@@ -50,7 +50,12 @@ var trigger = function (component, path) {
         }
 
         _.each(component._watches, function (watch) {
-            if (!watch.path && watch.path == path || _.startsWith(watch.path, path)) {
+            // if watch.path is empty then it is a root watch so add
+            if (!watch.path ||
+                // exact match so add
+                watch.path == path ||
+                // represents any children to be added
+                _.startsWith(watch.path, path + '.')) {
                 watches.push(watch);
             } else if (parentPaths.length > 0 && _.find(parentPaths, function (p) { return p == watch.path })) {
                 watches.push(watch);
